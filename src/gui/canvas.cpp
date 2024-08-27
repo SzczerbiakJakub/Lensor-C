@@ -26,7 +26,7 @@ Canvas::~Canvas() {
 
 void Canvas::createDefaultView() {
     axis = buildAxis();
-    createDefaultLens(-200);
+    createDefaultLens(150);
     //drawPoint(100, 200);
 }
 
@@ -58,9 +58,9 @@ void Canvas::paintEvent(QPaintEvent* event) {
 
     QPainter * painter = new QPainter(this);
     painter->fillRect(this->rect(), QColor("white"));
-    QPen pen(Qt::black, 2);
+    QPen realPointPen(Qt::black, 5), resultingPointPen(Qt::red, 5), realPointPenId(Qt::black, 2), resultingPointPenId(Qt::red, 2);
+    painter->setPen(QPen((Qt::black, 2)));
     QLineF line = QLineF(*axis);
-    painter->setPen(pen);
     draw(painter, &line); 
     
     painter->setPen(QPen(Qt::gray, 1));
@@ -89,7 +89,8 @@ void Canvas::paintEvent(QPaintEvent* event) {
 
     for (GraphicPoint graphicPoint : *viewModel->getGraphicPoints()) {
         QPointF point(graphicPoint);
-        draw(painter, &point);
+        draw(painter, &point, &realPointPen);
+        draw_id(painter, &graphicPoint, &realPointPenId);
     }
     
     for (GraphicLine line : *viewModel->getGraphicLines()) {
@@ -101,7 +102,8 @@ void Canvas::paintEvent(QPaintEvent* event) {
 
     for (GraphicPoint graphicPoint : *viewModel->getResultingGraphicPoints()) {
         QPointF point(graphicPoint);
-        draw(painter, &point);
+        draw(painter, &point, &resultingPointPen);
+        draw_id(painter, &graphicPoint, &resultingPointPenId);
     }
 
     for (GraphicLine line : *viewModel->getResultingGraphicLines()) {
@@ -125,17 +127,40 @@ void Canvas::draw(QPainter* painter, QLineF* line) {
 
 }
 
-void Canvas::draw(QPainter* painter, QPointF* point) {
+void Canvas::draw(QPainter* painter, QPointF* point, QPen* pen) {
+    painter->setPen(*pen);
     painter->drawPoint(*point);
 
 }
 
+
+void Canvas::draw_id(QPainter* painter, Item* item, QPen* pen) {
+
+    QString id = QString::fromStdString(item->getId());
+    qreal x = item->getX(), y = item->getY();
+
+    QPainterPath path;
+    QFont font("Arial", 30, 20, true);
+
+
+    painter->setFont(font);
+    painter->setPen(*pen);
+
+
+    path.addText(x+15, y, font, id);
+    painter->drawPath(path);
+
+}
+
+
 void Canvas::draw(QPainter* painter, std::pair<std::pair<QLineF, QLineF>, std::pair<QPointF, QPointF>> * complete_lens) {
+
+    QPen pen(Qt::black, 5);
 
     this->draw(painter, &complete_lens->first.first);
     this->draw(painter, &complete_lens->first.second);
-    this->draw(painter, &complete_lens->second.first);
-    this->draw(painter, &complete_lens->second.second);
+    this->draw(painter, &complete_lens->second.first, &pen);
+    this->draw(painter, &complete_lens->second.second, &pen);
 
 }
 

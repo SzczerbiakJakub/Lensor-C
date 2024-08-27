@@ -1,6 +1,7 @@
 #pragma once
 #include <item.h>
 #include <vector>
+#include <string>
 
 
 class CanvasData
@@ -11,7 +12,7 @@ public:
 	~CanvasData();
 	Item getItem(int index);
 	Item getItem(int x, int y);
-	GraphicPoint* getGraphicPoint(int index);
+	GraphicPoint getGraphicPoint(int index);
 	GraphicPoint getGraphicPoint(int x, int y);
 	GraphicPoint getResultingGraphicPoints(int index);
 	GraphicPoint getResultingGraphicPoints(int x, int y);
@@ -33,6 +34,7 @@ public:
 	std::vector<GraphicLine>* getResultingGraphicLines() { return resultingGraphicLines; };
 	std::vector<GraphicLens>* getGraphicLenses() { return graphicLenses; };
 	std::vector<Ray>* getRays() { return rays; };
+	std::vector<GraphicPoint>* getLinePoints() { return linePoints; };
 
 	bool getDrawingLine() { return drawingLine; };
 	bool getDrawingShape() { return drawingShape; };
@@ -49,12 +51,20 @@ public:
 	void setDrawingLine(bool drawingLine) { this->drawingLine = drawingLine; };
 	void setDrawingShape(bool drawingShape) { this->drawingShape = drawingShape; };
 
-	void setFirstDrawnPoint(GraphicPoint* pointPtr) { firstDrawnPointPtr = pointPtr; };
-	void setLastDrawnPoint(GraphicPoint* pointPtr) { lastDrawnPointPtr = pointPtr; };
-	GraphicPoint* getFirstDrawnPoint() { return firstDrawnPointPtr; };
-	GraphicPoint* getLastDrawnPoint() { return lastDrawnPointPtr; };
+	void setFirstDrawnPoint(GraphicPoint* point) { firstDrawnPointPtr = point; };
+	void setLastDrawnPoint(GraphicPoint* point) { lastDrawnPointPtr = point; };
 
+	void resetFirstDrawnPoint() { firstDrawnPointPtr = nullptr; };
+	void resetLastDrawnPoint() { lastDrawnPointPtr = nullptr; };
 
+	GraphicPoint getFirstDrawnPoint() { return *firstDrawnPointPtr; };
+	GraphicPoint getLastDrawnPoint() { return *lastDrawnPointPtr; };
+	GraphicPoint* getFirstDrawnPointPtr() { return firstDrawnPointPtr; }
+	GraphicPoint* getLastDrawnPointPtr() { return firstDrawnPointPtr; }
+
+	void drawFinishedShape();
+
+	std::string defineNewId();
 
 private:
 	bool drawingLine;
@@ -69,5 +79,7 @@ private:
 	std::vector<GraphicLens>* graphicLenses;
 	std::vector<NumericPoint>* numericPoints;
 	std::vector<Ray>* rays;
+	std::vector<GraphicPoint>* linePoints;
+	std::vector<GraphicPoint>* shapePoints;
 };
 

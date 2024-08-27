@@ -29,9 +29,12 @@ public:
 	void setDrawingShape(bool drawingShape) { return dataPtr->setDrawingShape(drawingShape); };
 
 	void setLastDrawnPoint(GraphicPoint* pointPtr) { return dataPtr->setLastDrawnPoint(pointPtr); };
-	GraphicPoint* getLastDrawnPoint() { return dataPtr->getLastDrawnPoint(); };
+	GraphicPoint getLastDrawnPoint() { return dataPtr->getLastDrawnPoint(); };
 
 	void drawFinishedShape();
+
+	void checkLineDrawing(GraphicPoint* point);
+	void checkShapeDrawing(GraphicPoint* point);
 
 private:
 	CanvasData* dataPtr;

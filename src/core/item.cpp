@@ -63,7 +63,8 @@ std::pair<int, int> Ray::solveRayIntersection(Ray ray1, Ray ray2) {
 	return std::pair<int, int>(x, y);
 }
 
-Item::Item(int x, int y) : x(x), y(y) {}
+Item::Item(int x, int y) : x(x), y(y) {
+}
 
 Item::~Item() {}
 
@@ -114,6 +115,22 @@ GraphicPoint::GraphicPoint(int x, int y, bool real, GraphicLens* lensPtr) : Item
 	}
 }
 
+
+//GraphicPoint::GraphicPoint(GraphicPoint& point): Item(point.getX(), point.getY()) {
+//	real = point.isReal();
+//	lensPtr = point.getLensPtr();
+//	if (real) {
+//		setRealFocusRay(lensPtr);
+//		setImagFocusRay(lensPtr);
+//		setResultingPointPtr();
+//	}
+//	else
+//	{
+//		resultingPoint = nullptr;
+//	}
+//}
+
+
 GraphicPoint::~GraphicPoint() {}
 
 GraphicPoint GraphicPoint::getPointB(int pointBx, double linearFactor) {
@@ -161,6 +178,13 @@ void GraphicPoint::setResultingPointPtr() {
 	resultingPoint = resulting;
 }
 
+
+void GraphicPoint::setId(std::string* id) {
+	if (isReal())
+		this->id = *id;
+	else
+		this->id = *id + "'";
+}
 
 NumericPoint::NumericPoint(int x, int y) : Item(x, y) {}
 

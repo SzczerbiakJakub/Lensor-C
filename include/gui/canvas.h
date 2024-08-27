@@ -29,8 +29,9 @@ protected:
 	void paintEvent(QPaintEvent* event= nullptr) override;
 	void draw(QPainter* painter, Item* item);
 	void draw(QPainter* painter, QLineF* line);
-	void draw(QPainter* painter, QPointF* point);
+	void draw(QPainter* painter, QPointF* point, QPen* pen);
 	void draw(QPainter* painter, std::pair<std::pair<QLineF, QLineF>, std::pair<QPointF, QPointF>>* complete_lens);
+	void draw_id(QPainter* painter, Item* item, QPen* pen);
 	void appendResultingPoints();
 	void mousePressEvent(QMouseEvent* event) override;
 
@@ -49,7 +50,7 @@ protected:
 	void setDrawingShape(bool drawingShape) { return viewModel->setDrawingShape(drawingShape); };
 
 	void setLastDrawnPoint(GraphicPoint* pointPtr) { return viewModel->setLastDrawnPoint(pointPtr); };
-	GraphicPoint* getLastDrawnPoint() { return viewModel->getLastDrawnPoint(); };
+	GraphicPoint getLastDrawnPoint() { return viewModel->getLastDrawnPoint(); };
 
 
 private:

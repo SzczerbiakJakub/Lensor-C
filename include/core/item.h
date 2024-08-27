@@ -83,6 +83,7 @@ public:
 class Item
 {
 public:
+	Item() { x = NULL; y = NULL; };
 	Item(int x, int y);
 	~Item();
 
@@ -90,6 +91,7 @@ public:
 	void setY(int y);
 	int getX() { return x; };
 	int getY() { return y; };
+	std::string getId() { return id; };
 	void hide();
 	void unhide();
 
@@ -101,7 +103,7 @@ public:
 protected:
 	int x;
 	int y;
-	int id;
+	std::string id;
 
 };
 
@@ -170,7 +172,9 @@ protected:
 class GraphicPoint : public Item
 {
 public:
+	GraphicPoint() { x = NULL; y = NULL; real = false; lensPtr = nullptr; };
 	GraphicPoint(int x, int y, bool real, GraphicLens* lens_ptr);
+	//GraphicPoint(GraphicPoint& point);
 	~GraphicPoint();
 	GraphicPoint getPointB(int pointBx, double linear_factor);
 	//std::string getItemID();
@@ -184,12 +188,15 @@ public:
 	void setResultingPointPtr();
 	GraphicPoint* getResultingPoint() { return resultingPoint; };
 
-
+	bool isReal() { return real; }
+	GraphicLens* getLensPtr() { return lensPtr; }
 
 	operator QPointF()
 	{
 		return QPointF((float)x, (float)y);
 	}
+
+	void setId(std::string* id);
 
 private:
 	//std::string id;
@@ -213,6 +220,8 @@ public:
 	};
 
 	GraphicLine getResultingLine() { return *resultingLine; };
+	GraphicPoint getPointA() { return pointA; };
+	GraphicPoint getPointB() { return pointB; };
 
 private:
 	bool real;
