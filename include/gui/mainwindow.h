@@ -32,7 +32,9 @@ private:
 
 private slots:
     void on_graphicProjectButton_clicked();
+    void on_numericProjectButton_clicked();
     void onCreateShape();
     void onCreateLine();
+    void onClearSketch();
 
 };

@@ -8,6 +8,7 @@ CanvasData::CanvasData() {
 	graphicLenses = new std::vector<GraphicLens>;
 	resultingGraphicLines = new std::vector<GraphicLine>;
 	graphicLines = new std::vector<GraphicLine>;
+	infinityGraphicLines = new std::vector<InfinityGraphicLine>;
 	numericPoints = new std::vector<NumericPoint>;
 	rays = new std::vector<Ray>;
 	linePoints = new std::vector<GraphicPoint>;
@@ -28,6 +29,7 @@ CanvasData::~CanvasData() {
 	delete numericPoints;
 	delete rays;
 	delete linePoints;
+	delete infinityGraphicLines;
 	delete shapePoints;
 }
 
@@ -51,11 +53,11 @@ void CanvasData::addGraphicPoint(int x, int y, GraphicLens* lensPtr) {
 
 		if (static_cast<int>(linePoints->size()) == 2)
 		{
+			setDrawingLine(false);
 			GraphicPoint point1=linePoints->front(), point2 = linePoints->back();
 			GraphicLine* linePtr = new GraphicLine(&point1, &point2, true);
 			//qDebug() << "LINE: " << linePtr->getPointA().getX() << ", " << linePtr->getPointA().getY() << "; " << linePtr->getPointB().getX() << ", " << linePtr->getPointB().getY();
 			addGraphicLine(linePtr);
-			setDrawingLine(false);
 			delete linePoints;
 			linePoints = new std::vector<GraphicPoint>;
 		}
@@ -82,6 +84,8 @@ void CanvasData::addGraphicPoint(int x, int y, GraphicLens* lensPtr) {
 
 void CanvasData::drawFinishedShape() {
 
+	setDrawingShape(false);
+
 	int shapePointsSize = static_cast<int>(shapePoints->size());
 
 	std::vector<GraphicPoint> points = *shapePoints;
@@ -89,7 +93,6 @@ void CanvasData::drawFinishedShape() {
 	GraphicLine* linePtr = new GraphicLine(&point1, &point2, true);
 	
 	addGraphicLine(linePtr);
-	setDrawingShape(false);
 	delete shapePoints;
 	shapePoints = new std::vector<GraphicPoint>;
 }
@@ -123,15 +126,47 @@ void CanvasData::addGraphicLens(GraphicLens* lensPtr) {
 
 void CanvasData::addGraphicLine(GraphicLine* linePtr) {
 
-	GraphicLine line = *linePtr, resultingLine = line.getResultingLine();
+	GraphicLine line = *linePtr;
 	graphicLines->push_back(line);
-	addResultingGraphicLine(&resultingLine);
+
+	if (linePtr->crossedRealFocusX(&getGraphicLenses()->back()))
+	{
+		bool whileDrawingShape = getDrawingShape() ? true : false;
+		GraphicLens* lensPtr = linePtr->getPointA().getLensPtr();
+
+		setDrawingShape(false);
+		std::pair<std::pair<int, int>, std::pair<int, int>> focusPointsCoords = linePtr->getPointsNearbyRealFocus(lensPtr);
+		GraphicPoint pointA = *linePtr->getPointA().getResultingPoint(), pointB = *linePtr->getPointB().getResultingPoint(), extensionOfA, extensionOfB;
+		addGraphicPoint(focusPointsCoords.first.first, focusPointsCoords.first.second, lensPtr);
+		extensionOfA = *graphicPoints->back().getResultingPoint();
+		addGraphicPoint(focusPointsCoords.second.first, focusPointsCoords.second.second, lensPtr);
+		extensionOfB = *graphicPoints->back().getResultingPoint();
+
+		InfinityGraphicLine* infinityLine = new InfinityGraphicLine(&pointA, &pointB, &extensionOfA, &extensionOfB);
+			
+		addInfinityGraphicLine(infinityLine);
+
+		if (whileDrawingShape)
+			setDrawingShape(true);
+
+	}
+	else
+	{
+		GraphicLine resultingLine = line.getResultingLine();
+		addResultingGraphicLine(&resultingLine);
+	}
+	
 }
 
 
 void CanvasData::addResultingGraphicLine(GraphicLine* linePtr) {
 
 	resultingGraphicLines->push_back(*linePtr);
+}
+
+
+void CanvasData::addInfinityGraphicLine(InfinityGraphicLine* linePtr) {
+	infinityGraphicLines->push_back(*linePtr);
 }
 
 
@@ -157,12 +192,12 @@ void CanvasData::clearAllData() {
 	graphicPoints = new std::vector<GraphicPoint>;
 	delete resultingGraphicPoints;
 	resultingGraphicPoints = new std::vector<GraphicPoint>;
-	delete graphicLenses;
-	graphicLenses = new std::vector<GraphicLens>;
 	delete resultingGraphicLines;
 	resultingGraphicLines = new std::vector<GraphicLine>;
 	delete graphicLines;
 	graphicLines = new std::vector<GraphicLine>;
+	delete infinityGraphicLines;
+	infinityGraphicLines = new std::vector<InfinityGraphicLine>;
 	delete numericPoints;
 	numericPoints = new std::vector<NumericPoint>;
 	delete rays;

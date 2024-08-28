@@ -27,9 +27,13 @@ MainWindow::MainWindow(QWidget *parent)
     QAction* createShape = new QAction("Create shape...", this);
     connect(createShape, &QAction::triggered, this, &MainWindow::onCreateShape);
 
+    QAction* clearSketch = new QAction("Clear sketch...", this);
+    connect(clearSketch, &QAction::triggered, this, &MainWindow::onClearSketch);
+
     QMenu* fileMenu = menuBar()->addMenu("Sketch");
     fileMenu->addAction(createLine);
     fileMenu->addAction(createShape);
+    fileMenu->addAction(clearSketch);
  
    
 }
@@ -41,21 +45,20 @@ void MainWindow::on_graphicProjectButton_clicked()
 {
     ui.graphicProjectButton->setVisible(false);
     ui.numericProjectButton->setVisible(false);
-    //ui.graphicsView->setVisible(true);
 
+    canvas->createDefaultGraphicView();
     canvas->setVisible(true);
-
-    //QScreen* screen = QApplication::primaryScreen();
-    //QSize size = screen->size();
-    //Axis* axis = new Axis(500, 10, 1000);
-    //axis->printAtributesOut();
-    ////ui.graphicsView->setGeometry(0, 0, 1800, 900);
-    //Painter painter(Qt::black, Qt::blue, 2);
-    //painter.begin(ui.graphicsView);
-    //painter.drawLine(QLineF(*axis));
-
 }
 
+void MainWindow::on_numericProjectButton_clicked()
+{
+    ui.graphicProjectButton->setVisible(false);
+    ui.numericProjectButton->setVisible(false);
+
+    canvas->createDefaultNumericView();
+    canvas->setVisible(true);
+
+}
 
 void MainWindow::keyPressEvent(QKeyEvent* event)
 {
@@ -77,6 +80,10 @@ void MainWindow::onCreateLine() {
     canvas->viewModel->setDrawingShape(false);
 }
 
+void MainWindow::onClearSketch() {
+    canvas->viewModel->clearAllData();
+    canvas->repaint();
+}
 
 void MainWindow::threadFunction() {
     canvas->drawSomePoints();

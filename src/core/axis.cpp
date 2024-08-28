@@ -7,8 +7,3 @@ Axis::Axis(int height, int start, int end) : height(height), width(5), start(sta
 
 
 Axis::~Axis() {}
-
-
-void Axis::printAtributesOut() {
-	qDebug() << height << " " << width;
-}

@@ -6,30 +6,26 @@ Canvas::Canvas(QWidget* parent = nullptr) : QWidget(parent) {
     this->setGeometry(5, 5, 1300, 700);
     CanvasData* canvasData = new CanvasData();
     viewModel = new CanvasViewModel(canvasData);
-    createDefaultView();
 
-
-    //GraphicPoint a = graphicPoints.back(), b = a.getPointB(graphicLenses.back().getX(), 1.0);
-    //graphicPoints.push_back(a);
-    //graphicPoints.push_back(b);
-
-    //Ray ray(std::pair<int, int>(a), (b));
-    //rays.push_back(ray);getFocalRay
-    //rays.push_back(ray);
-
-    this->paintEvent();
 }
 
 Canvas::~Canvas() {
 
 }
 
-void Canvas::createDefaultView() {
+void Canvas::createDefaultGraphicView() {
     axis = buildAxis();
     createDefaultLens(150);
+    paintEvent();
     //drawPoint(100, 200);
 }
 
+void Canvas::createDefaultNumericView() {
+    axis = buildAxis();
+    paintEvent();
+    //createDefaultLens(150);
+    //drawPoint(100, 200);
+}
 
 void Canvas::createDefaultLens(int focal) {
     lens = new GraphicLens(650, 350, focal, 100, 500);
@@ -65,7 +61,10 @@ void Canvas::paintEvent(QPaintEvent* event) {
     
     painter->setPen(QPen(Qt::gray, 1));
 
-    for (Ray ray : *viewModel->getRays()) {
+
+    //      FOR RAY DRAWING UNCODE THE SNIPPET BELOW
+
+    /*for (Ray ray : *viewModel->getRays()) {
         QLineF rayLine(ray);
         draw(painter, &rayLine);
     }
@@ -78,7 +77,7 @@ void Canvas::paintEvent(QPaintEvent* event) {
         draw(painter, &b);
         draw(painter, &c);
         draw(painter, &d);
-    }
+    }*/
     
     painter->setPen(QPen(Qt::black, 5));
 
@@ -109,6 +108,13 @@ void Canvas::paintEvent(QPaintEvent* event) {
     for (GraphicLine line : *viewModel->getResultingGraphicLines()) {
         QLineF lineF(line);
         draw(painter, &lineF);
+    }
+
+    for (InfinityGraphicLine line : *viewModel->getInfinityGraphicLines()) {
+        std::pair<QLineF, QLineF> infinityLine(line);
+        QLineF firstLineF(infinityLine.first), secondLineF(infinityLine.second);
+        draw(painter, &firstLineF);
+        draw(painter, &secondLineF);
     }
 
     

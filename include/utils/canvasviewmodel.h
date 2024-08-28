@@ -18,6 +18,7 @@ public:
 	std::vector<GraphicPoint>* getResultingGraphicPoints() { return dataPtr->getResultingGraphicPoints(); };
 	std::vector<GraphicLine>* getGraphicLines() { return dataPtr->getGraphicLines(); };
 	std::vector<GraphicLine>* getResultingGraphicLines() { return dataPtr->getResultingGraphicLines(); };
+	std::vector<InfinityGraphicLine>* getInfinityGraphicLines() { return dataPtr->getInfinityGraphicLines(); };
 	std::vector<GraphicLens>* getGraphicLenses() { return dataPtr->getGraphicLenses(); };
 	std::vector<Ray>* getRays() { return dataPtr->getRays(); };
 
@@ -35,6 +36,8 @@ public:
 
 	void checkLineDrawing(GraphicPoint* point);
 	void checkShapeDrawing(GraphicPoint* point);
+	
+	void clearAllData() { return dataPtr->clearAllData(); };
 
 private:
 	CanvasData* dataPtr;

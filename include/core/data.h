@@ -24,6 +24,7 @@ public:
 	void addResultingGraphicPoint(GraphicPoint* pointPtr);
 	void addGraphicLine(GraphicLine* linePtr);
 	void addResultingGraphicLine(GraphicLine* linePtr);
+	void addInfinityGraphicLine(InfinityGraphicLine* linePtr);
 	void addGraphicLens(GraphicLens* lensPtr);
 	void addRay();
 
@@ -32,10 +33,11 @@ public:
 	std::vector<GraphicPoint>* getResultingGraphicPoints() { return resultingGraphicPoints; };
 	std::vector<GraphicLine>* getGraphicLines() { return graphicLines; };
 	std::vector<GraphicLine>* getResultingGraphicLines() { return resultingGraphicLines; };
+	std::vector<InfinityGraphicLine>* getInfinityGraphicLines() { return infinityGraphicLines; };
 	std::vector<GraphicLens>* getGraphicLenses() { return graphicLenses; };
 	std::vector<Ray>* getRays() { return rays; };
 	std::vector<GraphicPoint>* getLinePoints() { return linePoints; };
-
+	
 	bool getDrawingLine() { return drawingLine; };
 	bool getDrawingShape() { return drawingShape; };
 
@@ -76,6 +78,7 @@ private:
 	std::vector<GraphicPoint>* resultingGraphicPoints;
 	std::vector<GraphicLine>* graphicLines;
 	std::vector<GraphicLine>* resultingGraphicLines;
+	std::vector<InfinityGraphicLine>* infinityGraphicLines;
 	std::vector<GraphicLens>* graphicLenses;
 	std::vector<NumericPoint>* numericPoints;
 	std::vector<Ray>* rays;

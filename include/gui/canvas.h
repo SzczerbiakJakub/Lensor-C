@@ -22,10 +22,11 @@ public:
 	CanvasViewModel* viewModel;
 	void drawPoint(int x, int y);
 	void drawSomePoints();
+	void createDefaultGraphicView();
+	void createDefaultNumericView();
 
 
 protected:
-	void createDefaultView();
 	void paintEvent(QPaintEvent* event= nullptr) override;
 	void draw(QPainter* painter, Item* item);
 	void draw(QPainter* painter, QLineF* line);
@@ -39,6 +40,7 @@ protected:
 	std::vector<GraphicPoint>* getResultingGraphicPoints() { return viewModel->getResultingGraphicPoints(); };
 	std::vector<GraphicLine>* getGraphicLines() { return viewModel->getGraphicLines(); };
 	std::vector<GraphicLine>* getResultingGraphicLines() { return viewModel->getResultingGraphicLines(); };
+	std::vector<InfinityGraphicLine>* getInfinityGraphicLines() { return viewModel->getInfinityGraphicLines(); };
 	std::vector<GraphicLens>* getGraphicLenses() { return viewModel->getGraphicLenses(); };
 	std::vector<Ray>* getRays() { return viewModel->getRays(); };
 

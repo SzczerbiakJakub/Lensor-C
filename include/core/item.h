@@ -176,7 +176,8 @@ public:
 	GraphicPoint(int x, int y, bool real, GraphicLens* lens_ptr);
 	//GraphicPoint(GraphicPoint& point);
 	~GraphicPoint();
-	GraphicPoint getPointB(int pointBx, double linear_factor);
+	//GraphicPoint getLinearPoint(int pointBx, double linearFactor);
+	std::pair<int, int> getLinearPointCoords(int pointBx, double linearFactor);
 	//std::string getItemID();
 	void setRealFocusRay(GraphicLens* lens);
 	void setMiddleRay(GraphicLens* lens) {};
@@ -212,6 +213,7 @@ private:
 class GraphicLine
 {
 public:
+	GraphicLine() {};
 	GraphicLine(GraphicPoint* pointAPtr, GraphicPoint* pointBPtr, bool real);
 	~GraphicLine() {};
 
@@ -223,11 +225,37 @@ public:
 	GraphicPoint getPointA() { return pointA; };
 	GraphicPoint getPointB() { return pointB; };
 
+	bool crossedRealFocusX(GraphicLens* lensPtr);
+
+	std::pair<std::pair<int, int>, std::pair<int, int>> getPointsNearbyRealFocus(GraphicLens* lensPtr);
+
 private:
 	bool real;
 	GraphicPoint pointA;
 	GraphicPoint pointB;
 	GraphicLine* resultingLine;
+
+};
+
+
+class InfinityGraphicLine
+{
+public:
+	InfinityGraphicLine() {};
+	InfinityGraphicLine(GraphicPoint* pointAPtr, GraphicPoint* pointBPtr, GraphicPoint* extensionOfAPtr, GraphicPoint* extensionOfBPtr);
+	~InfinityGraphicLine() {};
+
+	operator std::pair<QLineF, QLineF>() {
+		QLineF lineA = QLineF(pointA.getX(), pointA.getY(), extensionOfA.getX(), extensionOfA.getY()),
+			lineB = QLineF(pointB.getX(), pointB.getY(), extensionOfB.getX(), extensionOfB.getY());
+		return std::pair<QLineF, QLineF>(lineA, lineB);
+	};
+
+protected:
+	GraphicPoint pointA;
+	GraphicPoint pointB;
+	GraphicPoint extensionOfA;
+	GraphicPoint extensionOfB;
 
 };
 

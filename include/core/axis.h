@@ -14,7 +14,6 @@ public:
 		return QLineF(start, height, end, height);
 	}
 	
-	void printAtributesOut();
 
 private:
 	int height;
